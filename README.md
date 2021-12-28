@@ -1,2 +1,2 @@
 # pafer
-비밀번호 관리 앱
+Simple Password Management Application

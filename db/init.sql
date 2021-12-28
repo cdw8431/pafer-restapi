@@ -1,12 +1,12 @@
 ﻿
-CREATE TABLE "user" (
+CREATE TABLE IF NOT EXISTS "user" (
     "id" SERIAL PRIMARY KEY,
     "email" VARCHAR(64) NOT NULL UNIQUE,
     "password" VARCHAR(256)   NOT NULL,
     "created" TIMESTAMP   NOT NULL
 );
 
-CREATE TABLE "card" (
+CREATE TABLE IF NOT EXISTS "card" (
     "id" SERIAL PRIMARY KEY,
     "user_id" INT   NOT NULL,
     "category_id" INT   NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE "card" (
     "created" TIMESTAMP   NOT NULL
 );
 
-CREATE TABLE "category" (
+CREATE TABLE IF NOT EXISTS "category" (
     "id" SERIAL NOT NULL PRIMARY KEY,
     "user_id" INT   NOT NULL,
     "category" VARCHAR(64)   NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE "category" (
     "created" TIMESTAMP   NOT NULL
 );
 
-CREATE TABLE "field" (
+CREATE TABLE IF NOT EXISTS "field" (
     "id" SERIAL PRIMARY KEY,
     "user_id" INT   NOT NULL,
     "field" VARCHAR(64)   NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE "field" (
     "created" TIMESTAMP   NOT NULL
 );
 
-CREATE TABLE "card_fileds" (
+CREATE TABLE IF NOT EXISTS "card_fileds" (
     "id" SERIAL PRIMARY KEY,
     "card_id" INT   NOT NULL,
     "filed_id" INT   NOT NULL,

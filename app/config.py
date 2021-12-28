@@ -1,10 +1,10 @@
-import json
+import os
 from typing import Optional
+from dotenv import load_dotenv
 
 from pydantic import BaseSettings, PostgresDsn
 
-with open("settings.json") as f:
-    config = json.loads(f.read())
+load_dotenv(verbose=True)
 
 
 class Settings(BaseSettings):
@@ -12,10 +12,10 @@ class Settings(BaseSettings):
 
     SQLALCHEMY_DATABASE_URL: Optional[PostgresDsn] = PostgresDsn.build(
         scheme="postgresql",
-        user=config.get("POSTGRES_USER"),
-        password=config.get("POSTGRES_PASSWORD"),
-        host=f"{config.get('POSTGRES_SERVER')}:{config.get('POSTGRES_PORT')}",
-        path=f"/{config.get('POSTGRES_DB')}",
+        user=os.getenv("POSTGRES_USER"),
+        password=os.getenv("POSTGRES_PASSWORD"),
+        host=f"{os.getenv('POSTGRES_SERVER')}:{os.getenv('POSTGRES_PORT')}",
+        path=f"/{os.getenv('POSTGRES_DB')}",
     )
 
 
