@@ -1,0 +1,63 @@
+name: test
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+          
+      - name: Create .env file
+        shell: bash
+        run: |
+          touch .env
+          echo POSTGRES_USER=postgres >> .env
+          echo POSTGRES_PASSWORD=postgres >> .env 
+          echo POSTGRES_SERVER=localhost >> .env 
+          echo POSTGRES_PORT=5432 >> .env 
+          echo POSTGRES_DB=postgres >> .env 
+      
+      - name: Setup Postgres
+        shell: bash
+        run: |
+          docker-compose -f ${{ github.workspace }}/docker-compose.yml up -d
+        
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        id: cache
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ env.pythonLocation }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ env.pythonLocation }}-pip-
+
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      - name: Lint with flake8
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
+          
+      - name: Test with pytest
+        run: |
+          pytest --cov=app --cov-report=xml
+          
+      - name: "Upload coverage to Codecov"
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+          files: ./coverage.xml
+          
