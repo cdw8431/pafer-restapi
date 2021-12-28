@@ -32,7 +32,7 @@ jobs:
         uses: danielweller-swp/postgresql-action@v2
         with:
           postgresql version: '14'
-          postgresql init scripts: './db/init.sql'
+          postgresql init scripts: './db/'
 
       - name: Test with pytest
         run: |
