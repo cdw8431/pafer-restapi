@@ -18,6 +18,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
+          POSTGRES_PORT: 5432
           POSTGRES_DB: postgres
         run:
           docker-compose -f ${{ github.workspace }}/docker-compose.yml up -d
