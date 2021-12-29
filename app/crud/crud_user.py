@@ -1,7 +1,15 @@
+import os
+from typing import Dict
 from sqlalchemy.orm import Session
+from passlib.context import CryptContext
+from datetime import datetime, timedelta
+from jose import jwt
 
 from models.user import User
-from schemas.user import UserCreate, UserUpdate
+from schemas.user import UserRegister, UserUpdate
+
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def get_users(db: Session, skip: int = 0, limit: int = 100):
@@ -16,12 +24,30 @@ def get_user_by_email(db: Session, email: str):
     return db.query(User).filter(User.email == email).first()
 
 
-def post_user(db: Session, obj_in: UserCreate):
-    db_obj = User(email=obj_in.email, password=obj_in.password)
+def get_password_verify(plain_password: str, hashed_password: str):
+    return pwd_context.verify(plain_password, hashed_password)
+
+
+def get_password_hash(password: str):
+    return pwd_context.hash(password)
+
+
+def create_access_token(data: Dict[str, str]):
+    to_encode = data.copy()
+
+    expire = datetime.now() + timedelta(minutes=120)
+    to_encode.update({"exp": expire})
+
+    SECRET_KEY, ALGORITHM = os.getenv("SECRET_KEY"), os.getenv("ALGORITHM")
+    return jwt.encode(to_encode, SECRET_KEY, ALGORITHM)
+
+
+def post_user(db: Session, obj_in: UserRegister):
+    email, password = obj_in.email, get_password_hash(obj_in.password)
+    db_obj = User(email=email, password=password)
     db.add(db_obj)
     db.commit()
-    db.refresh(db_obj)
-    return db_obj
+    return create_access_token({"sub": email})
 
 
 def update_user_by_id(db: Session, user_id: int, obj_in: UserUpdate):

@@ -9,21 +9,21 @@ class UserBase(BaseModel):
     created: Optional[datetime] = None
 
 
-class UserCreate(UserBase):
+class UserRegister(UserBase):
     email: EmailStr
     password: str
+
+
+class UserAuth(BaseModel):
+    access_token: str
 
 
 class UserUpdate(UserBase):
     password: str
 
 
-class UserInDBBase(UserBase):
+class User(UserBase):
     id: Optional[int] = None
 
     class Config:
         orm_mode = True
-
-
-class User(UserInDBBase):
-    pass

@@ -1,21 +1,27 @@
+import os
 from fastapi.testclient import TestClient
 
 from config import settings
 from main import app
+from jose import jwt
 
 client = TestClient(app)
 
 data = {"email": "test@email.com", "password": "testpassword"}
 
 
-def test_create_user():
-    res = client.post(f"{settings.API_V1_STR}/users", json=data)
+def test_register_user():
+    res = client.post(f"{settings.API_V1_STR}/users/register", json=data)
     assert res.status_code == 200
-    assert res.json().get("email") == data.get("email")
+    access_token = res.json().get("access_token")
+    SECRET_KEY, ALGORITHM = os.getenv("SECRET_KEY"), os.getenv("ALGORITHM")
+    assert access_token and data.get("email") == jwt.decode(
+        access_token, SECRET_KEY, algorithms=[ALGORITHM]
+    ).get("sub")
 
 
-def test_create_user_invalid1():
-    res = client.post(f"{settings.API_V1_STR}/users", json=data)
+def test_register_user_invalid1():
+    res = client.post(f"{settings.API_V1_STR}/users/register", json=data)
     assert res.status_code == 400
 
 
