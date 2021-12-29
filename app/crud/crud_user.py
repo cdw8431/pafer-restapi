@@ -5,7 +5,7 @@ from typing import Dict
 from jose import jwt
 from models.user import User
 from passlib.context import CryptContext
-from schemas.user import UserRegister, UserUpdate
+from schemas.user import UserPasswordChange, UserRegister
 from sqlalchemy.orm import Session
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -49,10 +49,16 @@ def post_user(db: Session, obj_in: UserRegister):
     return create_access_token({"sub": email})
 
 
-def update_user_by_id(db: Session, user_id: int, obj_in: UserUpdate):
+def update_user_password_by_id(db: Session, user_id: int, obj_in: UserPasswordChange):
+    SUCCESS_PASSWORD_CHANGE, OLDPASSWORD_NOT_MATCH = True, False
+
     user = db.query(User).filter(User.id == user_id).first()
-    user.password = obj_in.password
+    if not get_password_verify(obj_in.oldpassword, user.password):
+        return OLDPASSWORD_NOT_MATCH
+
+    user.password = get_password_hash(obj_in.newpassword)
     db.commit()
+    return SUCCESS_PASSWORD_CHANGE
 
 
 def delete_user_by_id(db: Session, user_id: int):

@@ -18,8 +18,9 @@ class UserAuth(BaseModel):
     access_token: str
 
 
-class UserUpdate(UserBase):
-    password: str
+class UserPasswordChange(UserBase):
+    oldpassword: str
+    newpassword: str
 
 
 class User(UserBase):

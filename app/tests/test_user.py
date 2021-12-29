@@ -23,6 +23,7 @@ def test_register_user():
 def test_register_user_invalid1():
     res = client.post(f"{settings.API_V1_STR}/users/register", json=data)
     assert res.status_code == 400
+    assert res.json() == {"detail": "This email already exists."}
 
 
 def test_read_users():
@@ -41,13 +42,22 @@ def test_read_user_by_id():
     assert res.json().get("email") == data.get("email")
 
 
-def test_update_user():
+def test_update_user_password():
     res = client.put(
-        f"{settings.API_V1_STR}/users/{data.get('id')}",
-        json={"password": "newtestpassword"},
+        f"{settings.API_V1_STR}/users/{data.get('id')}/change-password",
+        json={"oldpassword": data.get("password"), "newpassword": "newtestpassword"},
     )
     assert res.status_code == 200
     assert res.json() == {"msg": "success"}
+
+
+def test_update_user_password_invalid1():
+    res = client.put(
+        f"{settings.API_V1_STR}/users/{data.get('id')}/change-password",
+        json={"oldpassword": data.get("password"), "newpassword": "newtestpassword"},
+    )
+    assert res.status_code == 401
+    assert res.json() == {"detail": "Password does not match."}
 
 
 def test_delete_user_by_id():
