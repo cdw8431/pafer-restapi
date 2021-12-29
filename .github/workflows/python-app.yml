@@ -42,5 +42,13 @@ jobs:
           
       - name: Test with pytest
         run: |
-          pytest --cov=app
+          pytest --cov=app --cov-report=xml
+          
+      - name: "Upload coverage to Codecov"
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+          directory: ./coverage/reports/
+          files: ./coverage1.xml,./coverage2.xml
           
