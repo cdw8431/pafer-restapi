@@ -1,13 +1,12 @@
 import os
-from typing import Dict
-from sqlalchemy.orm import Session
-from passlib.context import CryptContext
 from datetime import datetime, timedelta
+from typing import Dict
+
 from jose import jwt
-
 from models.user import User
+from passlib.context import CryptContext
 from schemas.user import UserRegister, UserUpdate
-
+from sqlalchemy.orm import Session
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
