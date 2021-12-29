@@ -1,11 +1,10 @@
-from typing import Any, List, Dict
-
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from typing import Any, Dict, List
 
 from api import deps
 from crud import crud_user as crud
+from fastapi import APIRouter, Depends, HTTPException
 from schemas.user import User, UserAuth, UserRegister, UserUpdate
+from sqlalchemy.orm import Session
 
 router = APIRouter()
 

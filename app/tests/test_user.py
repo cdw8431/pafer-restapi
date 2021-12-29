@@ -1,9 +1,9 @@
 import os
-from fastapi.testclient import TestClient
 
 from config import settings
-from main import app
+from fastapi.testclient import TestClient
 from jose import jwt
+from main import app
 
 client = TestClient(app)
 
