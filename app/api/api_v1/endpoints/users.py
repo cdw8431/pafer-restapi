@@ -3,7 +3,7 @@ from typing import Any, Dict, List
 from api import deps
 from crud import crud_user as crud
 from fastapi import APIRouter, Depends, HTTPException
-from schemas.user import User, UserAuth, UserRegister, UserUpdate
+from schemas.user import User, UserAuth, UserPasswordChange, UserRegister
 from sqlalchemy.orm import Session
 
 router = APIRouter()
@@ -27,11 +27,12 @@ def register_user(user_in: UserRegister, db: Session = Depends(deps.get_db)) -> 
     return {"access_token": crud.post_user(db, user_in)}
 
 
-@router.put("/{user_id}")
-def update_user(
-    user_id: int, user_in: UserUpdate, db: Session = Depends(deps.get_db)
+@router.put("/{user_id}/change-password")
+def update_user_password(
+    user_id: int, user_in: UserPasswordChange, db: Session = Depends(deps.get_db)
 ) -> Dict[str, str]:
-    crud.update_user_by_id(db, user_id, user_in)
+    if not crud.update_user_password_by_id(db, user_id, user_in):
+        raise HTTPException(status_code=401, detail="Password does not match.")
     return {"msg": "success"}
 
 
