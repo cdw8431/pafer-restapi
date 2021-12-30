@@ -11,8 +11,8 @@ data = {"email": "test@email.com", "password": "testpassword"}
 
 
 def test_register_user():
-    res = client.post(f"{settings.API_V1_STR}/users/register", json=data)
-    assert res.status_code == 200
+    res = client.post(f"{settings.API_V1_STR}/users", json=data)
+    assert res.status_code == 201
     access_token = res.json().get("access_token")
     SECRET_KEY, ALGORITHM = os.getenv("SECRET_KEY"), os.getenv("ALGORITHM")
     assert access_token and data.get("email") == jwt.decode(
@@ -21,7 +21,7 @@ def test_register_user():
 
 
 def test_register_user_invalid1():
-    res = client.post(f"{settings.API_V1_STR}/users/register", json=data)
+    res = client.post(f"{settings.API_V1_STR}/users", json=data)
     assert res.status_code == 400
     assert res.json() == {"detail": "This email already exists."}
 
@@ -43,7 +43,7 @@ def test_read_user_by_id():
 
 
 def test_update_user_password():
-    res = client.put(
+    res = client.patch(
         f"{settings.API_V1_STR}/users/{data.get('id')}/change-password",
         json={"oldpassword": data.get("password"), "newpassword": "newtestpassword"},
     )
@@ -52,7 +52,7 @@ def test_update_user_password():
 
 
 def test_update_user_password_invalid1():
-    res = client.put(
+    res = client.patch(
         f"{settings.API_V1_STR}/users/{data.get('id')}/change-password",
         json={"oldpassword": data.get("password"), "newpassword": "newtestpassword"},
     )
@@ -62,5 +62,4 @@ def test_update_user_password_invalid1():
 
 def test_delete_user_by_id():
     res = client.delete(f"{settings.API_V1_STR}/users/{data.get('id')}")
-    assert res.status_code == 200
-    assert res.json() == {"msg": "success"}
+    assert res.status_code == 204
