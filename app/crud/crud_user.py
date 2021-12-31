@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional
 from jose import jwt
 from models.user import User
 from passlib.context import CryptContext
-from schemas.user import UserPasswordChange, UserRegister
+from schemas.user import UserAuth, UserPasswordChange
 from sqlalchemy.orm import Session
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -41,7 +41,7 @@ def create_access_token(data: Dict[str, str]) -> str:
     )
 
 
-def post_user(db: Session, obj_in: UserRegister) -> str:
+def post_user(db: Session, obj_in: UserAuth) -> str:
     email, password = obj_in.email, get_password_hash(obj_in.password)
     db_obj = User(email=email, password=password)
     db.add(db_obj)

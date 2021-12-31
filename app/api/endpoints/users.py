@@ -3,7 +3,7 @@ from typing import Any, Dict, List
 from api import deps
 from crud import crud_user as crud
 from fastapi import APIRouter, Depends, HTTPException
-from schemas.user import User, UserAuth, UserPasswordChange, UserRegister
+from schemas.user import User, UserAuth, UserPasswordChange, UserToken
 from sqlalchemy.orm import Session
 
 router = APIRouter()
@@ -30,9 +30,9 @@ def read_user_by_email(user_email: str, db: Session = Depends(deps.get_db)) -> A
     return user
 
 
-@router.post("", response_model=UserAuth, status_code=201)
+@router.post("", response_model=UserToken, status_code=201)
 def create_user(
-    user_in: UserRegister, db: Session = Depends(deps.get_db)
+    user_in: UserAuth, db: Session = Depends(deps.get_db)
 ) -> Dict[str, str]:
     user = crud.get_user_by_email(db, user_in.email)
     if user:
