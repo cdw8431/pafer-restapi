@@ -2,4 +2,5 @@ env
 .env
 .vscode
 .coverage
+.mypy_cache
 .pytest_cache

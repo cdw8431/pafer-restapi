@@ -18,3 +18,4 @@ repos:
     rev: v0.930
     hooks:
       - id: mypy
+        exclude: ^app/tests

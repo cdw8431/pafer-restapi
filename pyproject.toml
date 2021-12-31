@@ -2,6 +2,6 @@
 line-length = 88
 
 [tool.mypy]
-plugins = pydantic.mypy
 ignore_missing_imports = true
 disallow_untyped_defs = true
+exclude = 'app/tests'
