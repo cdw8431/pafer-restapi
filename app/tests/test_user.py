@@ -42,6 +42,12 @@ def test_read_user_by_id():
     assert res.json().get("email") == data.get("email")
 
 
+def test_read_user_by_email():
+    res = client.get(f"{settings.API_V1_STR}/users/email/{data.get('email')}")
+    assert res.status_code == 200
+    assert res.json().get("email") == data.get("email")
+
+
 def test_update_user_password():
     res = client.patch(
         f"{settings.API_V1_STR}/users/{data.get('id')}/change-password",
