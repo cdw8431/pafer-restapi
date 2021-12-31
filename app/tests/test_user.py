@@ -78,6 +78,15 @@ def test_update_user_password():
     assert res.json() == {"msg": "success"}
 
 
+def test_update_user_password_invalid2():
+    res = client.patch(
+        f"{settings.API_V1_STR}/users/{data.get('id')}/change-password",
+        json={"oldpassword": data.get("password"), "newpassword": "newtestpassword"},
+    )
+    assert res.status_code == 401
+    assert res.json() == {"detail": "Password does not match."}
+
+
 def test_delete_user_by_id():
     res = client.delete(f"{settings.API_V1_STR}/users/{data.get('id')}")
     assert res.status_code == 204
