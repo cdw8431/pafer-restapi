@@ -9,22 +9,22 @@ class UserBase(BaseModel):
     created: Optional[datetime] = None
 
 
-class UserRegister(UserBase):
+class User(UserBase):
+    id: Optional[int] = None
+
+    class Config:
+        orm_mode = True
+
+
+class UserAuth(UserBase):
     email: EmailStr
     password: str
 
 
-class UserAuth(BaseModel):
+class UserToken(BaseModel):
     access_token: str
 
 
 class UserPasswordChange(UserBase):
     oldpassword: str
     newpassword: str
-
-
-class User(UserBase):
-    id: Optional[int] = None
-
-    class Config:
-        orm_mode = True
