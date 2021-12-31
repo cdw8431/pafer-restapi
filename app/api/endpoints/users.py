@@ -19,8 +19,13 @@ def read_user_by_id(user_id: int, db: Session = Depends(deps.get_db)) -> Any:
     return crud.get_user_by_id(db, user_id)
 
 
+@router.get("/email/{user_email}", response_model=User)
+def read_user_by_email(user_email: str, db: Session = Depends(deps.get_db)) -> Any:
+    return crud.get_user_by_email(db, user_email)
+
+
 @router.post("", response_model=UserAuth, status_code=201)
-def register_user(user_in: UserRegister, db: Session = Depends(deps.get_db)) -> Any:
+def create_user(user_in: UserRegister, db: Session = Depends(deps.get_db)) -> Any:
     user = crud.get_user_by_email(db, user_in.email)
     if user:
         raise HTTPException(status_code=400, detail="This email already exists.")
