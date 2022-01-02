@@ -1,5 +1,5 @@
 from api.router import api_router
-from config import settings
+from core.config import settings
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse

@@ -25,6 +25,6 @@ class UserToken(BaseModel):
     access_token: str
 
 
-class UserPasswordChange(UserBase):
+class UserPasswordChange(BaseModel):
     oldpassword: str
     newpassword: str

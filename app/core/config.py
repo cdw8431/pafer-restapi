@@ -8,7 +8,7 @@ load_dotenv(verbose=True)
 
 
 class Settings(BaseSettings):
-    API_V1_STR: str = "/api/v1"
+    API_V1_STR: str = "/v1"
 
     SQLALCHEMY_DATABASE_URL: Optional[PostgresDsn] = PostgresDsn.build(
         scheme="postgresql",

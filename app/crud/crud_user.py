@@ -1,14 +1,9 @@
-import os
-from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from typing import List, Optional
 
-from jose import jwt
+from core.security import create_access_token, get_password_hash, get_password_verify
 from models.user import User
-from passlib.context import CryptContext
 from schemas.user import UserAuth, UserPasswordChange
 from sqlalchemy.orm import Session
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def get_users(db: Session, skip: int = 0, limit: int = 100) -> List[User]:
@@ -21,24 +16,6 @@ def get_user_by_id(db: Session, user_id: int) -> Optional[User]:
 
 def get_user_by_email(db: Session, email: str) -> Optional[User]:
     return db.query(User).filter(User.email == email).first()
-
-
-def get_password_verify(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
-
-
-def get_password_hash(password: str) -> str:
-    return pwd_context.hash(password)
-
-
-def create_access_token(data: Dict[str, str]) -> str:
-    to_encode: Dict[str, Any] = data.copy()
-    expire = datetime.now() + timedelta(minutes=120)
-
-    SECRET_KEY, ALGORITHM = os.getenv("SECRET_KEY"), os.getenv("ALGORITHM")
-    return jwt.encode(
-        to_encode.update({"exp": expire}) or to_encode, SECRET_KEY, ALGORITHM
-    )
 
 
 def post_user(db: Session, obj_in: UserAuth) -> str:
