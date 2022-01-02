@@ -16,13 +16,9 @@ class User(UserBase):
         orm_mode = True
 
 
-class UserAuth(UserBase):
+class UserAuth(BaseModel):
     email: EmailStr
     password: str
-
-
-class UserToken(BaseModel):
-    access_token: str
 
 
 class UserPasswordChange(BaseModel):

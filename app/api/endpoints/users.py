@@ -3,7 +3,7 @@ from typing import Any, Dict, List
 from api import deps
 from crud import crud_user as crud
 from fastapi import APIRouter, Depends, HTTPException
-from schemas.user import User, UserAuth, UserPasswordChange, UserToken
+from schemas.user import User, UserAuth, UserPasswordChange
 from sqlalchemy.orm import Session
 
 router = APIRouter()
@@ -26,17 +26,17 @@ def read_user_by_id(user_id: int, db: Session = Depends(deps.get_db)) -> Any:
 def read_user_by_email(user_email: str, db: Session = Depends(deps.get_db)) -> Any:
     user = crud.get_user_by_email(db, user_email)
     if not user:
-        raise HTTPException(status_code=404, detail="This user is not exists.")
+        raise HTTPException(status_code=404)
     return user
 
 
-@router.post("", response_model=UserToken, status_code=201)
-def create_user(
+@router.post("", status_code=201)
+def register_user(
     user_in: UserAuth, db: Session = Depends(deps.get_db)
 ) -> Dict[str, str]:
     user = crud.get_user_by_email(db, user_in.email)
     if user:
-        raise HTTPException(status_code=400, detail="This email already exists.")
+        raise HTTPException(status_code=400, detail="This user already exists.")
     return {"access_token": crud.post_user(db, user_in)}
 
 
