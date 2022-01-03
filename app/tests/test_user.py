@@ -16,6 +16,14 @@ def test_get_user_by_email_invalid1():
     assert res.status_code == 404
 
 
+def test_update_user_nickname_invalid1():
+    # user does not exists
+    res = client.patch(
+        f"{api_str}/users/-1/change-nickname/new{user_data.get('nickname')}"
+    )
+    assert res.status_code == 404
+
+
 def test_update_user_password_invalid1():
     # user does not exists
     res = client.patch(
@@ -63,13 +71,17 @@ def test_get_users():
 def test_get_user_by_id():
     res = client.get(f"{api_str}/users/{user_data.get('id')}")
     assert res.status_code == 200
-    assert res.json().get("email") == user_data.get("email")
+    result = res.json()
+    assert result.get("email") == user_data.get("email")
+    assert result.get("nickname") == user_data.get("nickname")
 
 
 def test_get_user_by_email():
     res = client.get(f"{api_str}/users/email/{user_data.get('email')}")
     assert res.status_code == 200
-    assert res.json().get("email") == user_data.get("email")
+    result = res.json()
+    assert result.get("email") == user_data.get("email")
+    assert result.get("nickname") == user_data.get("nickname")
 
 
 def test_post_user_login():
@@ -86,8 +98,14 @@ def test_update_user_password():
             "newpassword": "newtestpassword",
         },
     )
-    assert res.status_code == 200
-    assert res.json() == {"msg": "success"}
+    assert res.status_code == 204
+
+
+def test_update_user_nickname():
+    res = client.patch(
+        f"{api_str}/users/{user_data.get('id')}/change-nickname/new{user_data.get('nickname')}"
+    )
+    assert res.status_code == 204
 
 
 def test_post_user_login_invalid2():

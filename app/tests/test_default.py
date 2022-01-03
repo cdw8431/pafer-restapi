@@ -5,7 +5,7 @@ from main import app
 api_str = settings.API_V1_STR
 client = TestClient(app)
 
-user_data = {"email": "test@email.com", "password": "testpassword"}
+user_data = {"email": "test@email.com", "nickname": "test", "password": "testpassword"}
 
 
 def test_redirect_root_to_docs():
