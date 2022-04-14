@@ -10,4 +10,4 @@ class User(Base):
     email = Column(String(64), unique=True)
     nickname = Column(String(64), unique=True)
     password = Column(String(256), nullable=False)
-    created = Column(Date, default=datetime.now)
+    created_at = Column(Date, default=datetime.now)

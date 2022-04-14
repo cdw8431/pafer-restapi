@@ -1,8 +1,8 @@
 version: '3'
 
 services:
-  database:
-    container_name: 'pafer_database'
+  pafer-database:
+    container_name: 'pafer-database'
     image: 'postgres:14'
     ports:
       - "${POSTGRES_PORT}:${POSTGRES_PORT}"

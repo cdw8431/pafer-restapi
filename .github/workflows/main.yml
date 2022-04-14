@@ -20,9 +20,9 @@ jobs:
           echo SECRET_KEY=PAFER >> .env
           echo ALGORITHM=HS256 >> .env
           echo POSTGRES_USER=user >> .env
-          echo POSTGRES_PASSWORD=password >> .env 
-          echo POSTGRES_SERVER=localhost >> .env 
-          echo POSTGRES_PORT=5432 >> .env 
+          echo POSTGRES_PASSWORD=password >> .env
+          echo POSTGRES_SERVER=localhost >> .env
+          echo POSTGRES_PORT=5432 >> .env
           echo POSTGRES_DB=postgres >> .env
 
       - name: Setup Postgres

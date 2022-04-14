@@ -7,7 +7,7 @@ from pydantic import BaseModel, EmailStr
 class UserBase(BaseModel):
     email: Optional[EmailStr] = None
     nickname: Optional[str] = None
-    created: Optional[datetime] = None
+    created_at: Optional[datetime] = None
 
 
 class User(UserBase):
